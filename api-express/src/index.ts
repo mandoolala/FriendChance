@@ -22,18 +22,29 @@ const userById: Partial<{ [key: string]: User }> = {
   }
 }
 
-const nextNoteId = 1;
+const nextNoteId = 2;
 const notes: PromissoryNoteRecord[] = [
   {
     id: "0",
     purpose: "서울에서 전세 구하기",
-    amount: 90000,
+    amount: 9000000,
     createdAt: new Date().toISOString(),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
     lenderId: "",
     state: "draft",
+  },
+  {
+    id: "1",
+    purpose: "급한 소액대출 불끄기",
+    amount: 1000000,
+    createdAt: new Date().toISOString(),
+    contractDate: "",
+    paybackDate: "",
+    borrowerId: "123",
+    lenderId: "999",
+    state: "activated",
   }
 ];
 
