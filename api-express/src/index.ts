@@ -1,4 +1,4 @@
-import { User, LoanContractRecord, LoanContractResponse } from "./types";
+import { User, LoanContractRecord, LoanContractResponse, LoanContractState } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
 
 const express = require('express')
@@ -38,7 +38,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "",
-    state: "draft",
+    state: LoanContractState.Draft,
   },
   {
     id: "1",
@@ -47,8 +47,8 @@ const contracts: LoanContractRecord[] = [
     createdAt: new Date().toISOString(),
     contractDate: "",
     paybackDate: "",
-    borrowerId: "123",
-    lenderId: "999",
+    borrowerId: "999",
+    lenderId: "123",
     state: "activated",
   },
   {
@@ -58,9 +58,9 @@ const contracts: LoanContractRecord[] = [
     createdAt: new Date().toISOString(),
     contractDate: "",
     paybackDate: "",
-    borrowerId: "123",
-    lenderId: "",
-    state: "requested",
+    borrowerId: "999",
+    lenderId: "123",
+    state: LoanContractState.Requested,
   },
   {
     id: "3",
@@ -71,7 +71,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "approved",
+    state: LoanContractState.Approved,
   },
   {
     id: "4",
@@ -82,7 +82,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "repayed",
+    state: LoanContractState.Repayed,
   },
   ...[...Array(10)].map((_, index) => (
     {
@@ -94,7 +94,7 @@ const contracts: LoanContractRecord[] = [
       paybackDate: "",
       borrowerId: "123",
       lenderId: "999",
-      state: "activated" as const,
+      state: LoanContractState.Activated,
     }
   ))
 ];
@@ -115,14 +115,14 @@ const createDraftContract = (userId: string, data: RequestContractBody) => {
     contractDate: "",
     borrowerId: userId,
     lenderId: "",
-    state: "draft"
+    state: LoanContractState.Draft
   };
   contracts.push(contract);
   return contract;
 }
 
 const requestApproval = (contractId: string) => {
-  findContractById(contractId).state = "requested";
+  findContractById(contractId).state = LoanContractState.Requested;
 };
 
 const findContractById = (id: string) => {
@@ -171,7 +171,9 @@ app.post('/contracts', (req: RequestContractRequest, res) => {
 })
 
 app.post('/contracts/:id/confirm', (req, res) => {
-
+  const contractId = req.params.id;
+  const contract = findContractById(contractId);
+  // contract.state === ''
 });
 
 app.post('/contracts/:id/reject', (req, res) => {
