@@ -28,12 +28,15 @@ const getNextId = () => {
   nextContractId++;
   return String(nextContractId - 1);
 }
+const getDate = (afterDay: number) => {
+  return new Date(new Date().getTime() + afterDay * 24 * 3600 * 1000).toISOString();
+}
 const contracts: LoanContractRecord[] = [
   {
     id: "0",
     purpose: "서울에서 전세 구하기",
     amount: 9000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(0),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
@@ -44,7 +47,7 @@ const contracts: LoanContractRecord[] = [
     id: "1",
     purpose: "급한 소액대출 불끄기",
     amount: 1000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(1),
     contractDate: "",
     paybackDate: "",
     borrowerId: "999",
@@ -55,7 +58,7 @@ const contracts: LoanContractRecord[] = [
     id: "2",
     purpose: "집에 가고 싶어서 택시비 빌려줘",
     amount: 10000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(2),
     contractDate: "",
     paybackDate: "",
     borrowerId: "999",
@@ -66,7 +69,7 @@ const contracts: LoanContractRecord[] = [
     id: "3",
     purpose: "부자되게해주세요",
     amount: 100000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(3),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
@@ -77,7 +80,7 @@ const contracts: LoanContractRecord[] = [
     id: "4",
     purpose: "멕시코 타코 살사 소스",
     amount: 1000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(4),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
@@ -89,7 +92,7 @@ const contracts: LoanContractRecord[] = [
       id: String(index + 10),
       purpose: "급한 소액대출 불끄기",
       amount: 1000000,
-      createdAt: new Date().toISOString(),
+      createdAt: getDate(index + 10),
       contractDate: "",
       paybackDate: "",
       borrowerId: "123",
@@ -98,6 +101,8 @@ const contracts: LoanContractRecord[] = [
     }
   ))
 ];
+
+const timestamp = (isoDate: string) => new Date(isoDate).getTime();
 
 const findUserById = (id: string) => {
   return userById[id];
@@ -152,7 +157,9 @@ app.get('/user', (req: AuthorizedRequest, res) => {
 });
 
 app.get('/contracts', (req: AuthorizedRequest, res) => {
-  res.json(findContractsOfUser(req.user.id).map(enrichContract));
+  const result = findContractsOfUser(req.user.id).map(enrichContract);
+  result.sort((loanA, loanB) => timestamp(loanB.createdAt) - timestamp(loanA.createdAt));
+  res.json(result);
 });
 
 app.get('/contracts/:id', (req: GetContractRequest, res) => {
