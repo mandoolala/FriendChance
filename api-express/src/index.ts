@@ -1,4 +1,4 @@
-import { User, LoanContractRecord, LoanContractResponse, LoanContractDraftContent } from "./types";
+import { User, LoanContractRecord, LoanContractResponse } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
 
 const express = require('express')
@@ -60,7 +60,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "",
-    state: "requestedConfirm",
+    state: "requested",
   },
   {
     id: "3",
@@ -71,7 +71,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "pendingActivation",
+    state: "approved",
   },
   {
     id: "4",
@@ -82,7 +82,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "ended",
+    state: "repayed",
   },
   ...[...Array(10)].map((_, index) => (
     {

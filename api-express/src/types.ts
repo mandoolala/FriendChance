@@ -1,11 +1,11 @@
 
 type UserId = string;
 
-type Draft = 'draft';
-type Requested = 'requested';
-type Approved = 'approved';
-type Activated = 'activated';
-type Repayed = 'repayed';
+export type Draft = 'draft';
+export type Requested = 'requested';
+export type Approved = 'approved';
+export type Activated = 'activated';
+export type Repayed = 'repayed';
 
 export interface User {
   id: UserId;
