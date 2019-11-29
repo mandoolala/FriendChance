@@ -1,4 +1,5 @@
-import { User, PromissoryNoteRecord, PromissoryNoteResponse, AuthorizedRequest, GetNoteRequest } from "./types";
+import { User, PromissoryNoteRecord, PromissoryNoteResponse } from "./types";
+import { AuthorizedRequest, GetNoteRequest } from "./requestTypes";
 
 const express = require('express')
 const morgan = require('morgan')

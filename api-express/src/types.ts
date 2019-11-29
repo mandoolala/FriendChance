@@ -6,7 +6,6 @@ export interface User {
   name: string;
 }
 
-
 export interface PromissoryNoteContent {
   id: string;
   amount: number;
@@ -34,11 +33,3 @@ export interface PromissoryNoteResponse extends PromissoryNoteContent {
   borrower: User;
 }
 
-export interface AuthorizedRequest {
-  user: User;
-}
-
-export interface GetNoteRequest extends AuthorizedRequest {
-  params: { id: string };
-}
-  
