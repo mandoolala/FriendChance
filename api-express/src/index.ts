@@ -50,7 +50,20 @@ const notes: PromissoryNoteRecord[] = [
     borrowerId: "123",
     lenderId: "999",
     state: "activated",
-  }
+  },
+  ...[...Array(10)].map((_, index) => (
+      {
+        id: String(index + 10),
+        purpose: "급한 소액대출 불끄기",
+        amount: 1000000,
+        createdAt: new Date().toISOString(),
+        contractDate: "",
+        paybackDate: "",
+        borrowerId: "123",
+        lenderId: "999",
+        state: "activated" as const,
+      }
+  ))
 ];
 
 const findUserById = (id: string) => {
