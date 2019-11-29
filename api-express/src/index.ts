@@ -181,50 +181,61 @@ app.post('/contracts/:id/approve', (req, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
-  if (contract.state !== LoanContractState.Requested || contract.borrowerId === userId) {
-    res.status(404).send("Unauthorized");
-    return;
+  if (contract.state !== LoanContractState.Requested) {
+    res.status(400).send("Loan not requested");
+  } else if (contract.borrowerId === userId) {
+    res.status(400).send("You cannot lend money to yourself");
+  } else {
+    contract.state = LoanContractState.Approved;
+    contract.lenderId = userId;
+    res.status(200).json(contract);
   }
-  contract.state = LoanContractState.Approved;
-  res.status(200).json(contract);
+  
 });
 
 app.post('/contracts/:id/reject', (req, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
-  if (contract.state !== LoanContractState.Requested || contract.borrowerId === userId) {
-    res.status(404).send("Not Found");
-    return;
+  if (contract.state !== LoanContractState.Requested) {
+    res.status(400).send("Loan not requested");
+  } else if (contract.borrowerId === userId) {
+    res.status(400).send("You cannot lend money to yourself");
+  } else {
+    contract.state = LoanContractState.Draft;
+    res.status(200).json(contract);
   }
-  contract.state = LoanContractState.Draft;
-  res.status(200).json(contract);
 });
 
 app.post('/contracts/:id/activate', (req, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
-  if (contract.state !== LoanContractState.Approved || contract.lenderId !== userId) {
-    res.status(404).send("Not Found");
-    return;
+  if (contract.state !== LoanContractState.Approved) {
+    res.status(400).send("Loan not approved");
+  } else if (contract.lenderId !== userId) {
+    res.status(400).send("You cannot lend money to this loan");
+  } else {
+    // TODO:: Validating the transaction?
+    contract.state = LoanContractState.Activated;
+    res.status(200).json(contract);
   }
-  // TODO:: Validating the transaction?
-  contract.state = LoanContractState.Activated;
-  res.status(200).json(contract);
 });
 
 app.post('/contracts/:id/repay', (req, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
-  if (contract.state !== LoanContractState.Activated || contract.borrowerId !== userId) {
-    res.status(404).send("Not Found");
-    return;
+  if (contract.state !== LoanContractState.Activated) {
+    res.status(400).send("Loan not activated");
+  } else if (contract.borrowerId !== userId) {
+    res.status(400).send("You don't own this loan");
+  } else {
+    // TODO:: Validating the transaction?
+    contract.state = LoanContractState.Repayed;
+    res.status(200).json(contract);
   }
-  // TODO:: Validating the transaction?
-  contract.state = LoanContractState.Repayed;
-  res.status(200).json(contract);
+  
 });
 
 const PORT = Number(process.env.PORT) || 8080;
