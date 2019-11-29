@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "ts-node src/index.ts",
+    "start:watch": "nodemon src/index.ts",
     "lint:fix": "eslint --fix \"src/**/*\""
   },
   "dependencies": {

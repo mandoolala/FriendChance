@@ -49,7 +49,7 @@ const contracts: LoanContractRecord[] = [
     paybackDate: "",
     borrowerId: "999",
     lenderId: "123",
-    state: "activated",
+    state: LoanContractState.Activated,
   },
   {
     id: "2",
@@ -170,16 +170,58 @@ app.post('/contracts', (req: RequestContractRequest, res) => {
   res.status(200).json(draftContract);
 })
 
-app.post('/contracts/:id/confirm', (req, res) => {
+app.post('/contracts/:id/approve', (req, res) => {
   const contractId = req.params.id;
+  const userId = req.user.id;
   const contract = findContractById(contractId);
-  // contract.state === ''
+  if (contract.state !== LoanContractState.Requested || contract.borrowerId === userId) {
+    res.status(404).send("Unauthorized");
+    return;
+  }
+  contract.state = LoanContractState.Approved;
+  res.status(200).json(contract);
 });
 
 app.post('/contracts/:id/reject', (req, res) => {
-
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Requested || contract.borrowerId === userId) {
+    res.status(404).send("Not Found");
+    return;
+  }
+  contract.state = LoanContractState.Draft;
+  res.status(200).json(contract);
 });
 
-app.listen(8080, () => {
-  console.log('Server started at port 8080')
+app.post('/contracts/:id/activate', (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Approved || contract.lenderId !== userId) {
+    res.status(404).send("Not Found");
+    return;
+  }
+  // TODO:: Validating the transaction?
+  contract.state = LoanContractState.Activated;
+  res.status(200).json(contract);
+});
+
+app.post('/contracts/:id/repay', (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Activated || contract.borrowerId !== userId) {
+    res.status(404).send("Not Found");
+    return;
+  }
+  // TODO:: Validating the transaction?
+  contract.state = LoanContractState.Repayed;
+  res.status(200).json(contract);
+});
+
+const PORT = Number(process.env.PORT) || 8080;
+
+app.listen(PORT, () => {
+  console.log('Server started at port ' + PORT);
 })
