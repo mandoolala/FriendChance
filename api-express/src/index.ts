@@ -23,7 +23,7 @@ const userById: Partial<{ [key: string]: User }> = {
   }
 }
 
-let nextContractId = 2;
+let nextContractId = 200;
 const getNextId = () => {
   nextContractId++;
   return String(nextContractId - 1);
