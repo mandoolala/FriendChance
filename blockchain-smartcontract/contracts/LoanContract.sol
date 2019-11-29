@@ -12,17 +12,26 @@ contract LoanContract {
     string name;
     string identityNumber;
     string homeAddress;
+
+    PersonInfo[] BorrowList;
+    PersonInfo[] LendList;
   }
 
   struct Contract{
-    address contractID;
+
+    uint index;
+    //address contractID;
+
     loanStatus status;
 
     PersonInfo borrower;
     PersonInfo lender;
 
     uint256 borrowAmount;
+  
     string purpose;
+    string borrowCondition;
+
     string createdAt; //draft 생긴 시점
     string contractDate; //효력이 생기는 시점
     string paybackDate;
@@ -31,18 +40,28 @@ contract LoanContract {
     bool lender_signature;
   }
 
+
   mapping (address => PersonInfo) users;
-  mapping (address => mapping(string => Contract)) contracts;
+  //mapping (address => mapping(string => Contract)) public contracts;
+  //mapping (uint => Contract) public contractsMap;
   mapping (address => uint) creditPoints;
+
+  uint loanCount = 0;
+
+  Contract[] contractsList;
+
+  function getLoanCount() public view returns (uint){
+    return loanCount;
+  }
 
   event Register(address, string, string, string);
 
-  event CreateLoan(address, string); //borrower
-  event ApproveLoan(address, string); //lender
-  event RejectLoan(address, string); //lender
-  event DeleteLoan(address, string); //if rejected by lender
-  event ActivateLoan(address, string); //borrower when received money
-  event ConfirmRepayLoan(address, string); //lender
+  event CreateLoan(address, uint); //borrower
+  event ApproveLoan(address, uint); //lender
+  event RejectLoan(address, uint); //lender
+  event DeleteLoan(address, uint); //if rejected by lender
+  event ActivateLoan(address, uint); //borrower when received money
+  event ConfirmRepayLoan(address, uint); //lender
 
   function signPersonalInfo(personType _identifier, string memory _name, string memory _identityNumber, string memory _homeAddress) public {
 
@@ -54,6 +73,7 @@ contract LoanContract {
     emit Register(msg.sender, _name, _identityNumber, _homeAddress);
 
   }
+
   // function getUser(address userKey) public view
   //   returns(LoanContract.personType,string memory,string memory,string memory,uint256) {
   //   return(users[userKey].identifier, users[userKey].name, users[userKey].identityNumber, users[userKey].homeAddress, creditPoints[msg.sender]);
@@ -64,12 +84,13 @@ contract LoanContract {
   //   return (contracts[_contractID].borrower, contracts[_contractID].lender, contracts[_contractID].borrowAmount, contracts[_contractID].purpose, 
   //           contracts[_contractID].contractDate, contracts[_contractID].paybackDate);
   // }
-  function createLoan(string memory _contractID, string memory _createdAt, string memory _contractDate, string memory _paybackDate,
+
+  function createLoan(string memory _createdAt, string memory _contractDate, string memory _paybackDate,
                       string memory _purpose, uint _borrowAmount, PersonInfo memory _borrower, PersonInfo memory _lender) public {
 
     Contract memory new_contract;
-    new_contract.contractID = bytes32ToString(keccak256(_contractID));
-
+    //new_contract.contractID = bytes32ToString(keccak256(_contractID));
+    new_contract.index = loanCount;
     new_contract.createdAt = _createdAt;
     new_contract.contractDate = _contractDate;
     new_contract.paybackDate = _paybackDate;
@@ -79,51 +100,63 @@ contract LoanContract {
     new_contract.lender = _lender;
 
     new_contract.status = loanStatus.REQUESTED;
+    contractsList.push(new_contract);
+    //contractsMap[loanCount] = new_contract;
 
-    contracts[msg.sender][new_contract.contractID] = new_contract;
+    loanCount++;
 
-    emit CreateLoan(msg.sender, new_contract.contractID);
+    //contracts[msg.sender][new_contract.contractID] = new_contract;
+    emit CreateLoan(msg.sender, loanCount);
 
   }
 
-  function approveLoan(string memory _contractID, address _borrower) public _borrower {
+  function approveLoan(uint index, address _lender) public {
     
-    Contract memory loancontract = contracts[msg.sender][_contractID];
+    //Contract memory loancontract = contractsMap[msg.sender][_contractID];
+    Contract storage temp_contract = contractsList[index];
+
+    require(temp_contract.status == loanStatus.REQUESTED);
     
-    require(loancontract.status == loanStatus.REQUESTED);
-    
-    contracts[msg.sender][_contractID].status = loanStatus.APPROVED;
-        
-    emit ApproveLoan(msg.sender, _contractID);
+    //contractsMap[msg.sender][_contractID].status = loanStatus.APPROVED;
+    temp_contract.status = loanStatus.APPROVED;
+
+    emit ApproveLoan(msg.sender, index);
   }
 
-  function rejectLoan(string memory _contractID) public {
+  function rejectLoan(string memory _contractID, uint index) public {
 
-    Contract memory loancontract = contracts[msg.sender][_contractID];
+    Contract memory loancontract = contractsMap[msg.sender][_contractID];
+    Contract storage temp_contract = contractsList[index];
 
     require(loancontract.status == loanStatus.REQUESTED);
     
-    contracts[msg.sender][_contractID].status = loanStatus.REJECTED;
+    contractsMap[msg.sender][_contractID].status = loanStatus.REJECTED;
+    temp_contract.status = loanStatus.REJECTED;
     
     emit RejectLoan(msg.sender, _contractID);
   }
 
-  function repayLoan(string memory _contractID, address _lender, uint repayAmount) public _lender{
+  function repayLoan(string memory _contractID, uint index, address _lender, uint repayAmount) public _lender{
     
-    Contract memory loancontract = contracts[msg.sender][_contractID];
+    Contract memory loancontract = contractsMap[msg.sender][_contractID];
+    Contract storage temp_contract = contractsList[index];
 
     require(loancontract.status == loanStatus.REQUESTED);
 
     creditPoints[msg.sender] += 1;
     
-    contracts[msg.sender][_contractID].status = loanStatus.REPAYED;
+    contractsMap[msg.sender][_contractID].status = loanStatus.REPAYED;
+    temp_contract.status = loanStatus.REPAYED;
     
     emit ConfirmRepayLoan(msg.sender, _contractID);
   }
 
-  function deleteLoan(string memory _contractID) public {
+  function deleteLoan(string memory _contractID, uint index) public {
 
-    delete contracts[msg.sender][_contractID];
+    delete contractsMap[msg.sender][_contractID];
+    Contract storage temp_contract = contractsList[index];
+  
+    loanCount--;
 
     emit DeleteLoan(msg.sender, _contractID);
   }
@@ -136,6 +169,8 @@ contract LoanContract {
       b := m
     }
   }
+
+  
     
   function toBytesFromUint(uint256 x) internal pure returns (bytes memory b) {
     b = new bytes(32);
@@ -143,6 +178,16 @@ contract LoanContract {
       mstore(add(b, 32), x) 
     }
   }
+
+  function stringToBytes32(string memory source) private pure returns (bytes32 result) {
+    bytes memory tempEmptyStringTest = bytes(source);
+    if (tempEmptyStringTest.length == 0) {
+        return 0x0;
+    }
+    assembly {
+        result := mload(add(source, 32))
+    }
+}
     
   function bytes32ToString (bytes32 data) internal pure returns (string memory) {
     bytes memory bytesString = new bytes(32);
