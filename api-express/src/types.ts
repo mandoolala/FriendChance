@@ -1,22 +1,28 @@
 
 type UserId = string;
 
+type Draft = 'draft';
+type Requested = 'requested';
+type Approved = 'approved';
+type Activated = 'activated';
+type Repayed = 'repayed';
+
 export interface User {
   id: UserId;
   name: string;
 }
 
-export interface PromissoryNoteContent {
+export interface LoanContractContent {
   id: string;
   amount: number;
   purpose: string;
   createdAt: string;
   contractDate: string;
   paybackDate: string;
-  state: 'draft' | 'requestedConfirm' | 'pendingActivation' | 'activated' | 'ended';
+  state: Draft | Requested | Approved | Activated | Repayed;
 }
 
-export interface PromissoryNoteRecord extends PromissoryNoteContent {
+export interface LoanContractRecord extends LoanContractContent {
   id: string;
   amount: number;
   purpose: string;
@@ -27,40 +33,36 @@ export interface PromissoryNoteRecord extends PromissoryNoteContent {
   lenderId: UserId;
 }
 
-export type PromissoryNoteResponse = 
-  PromissoryNoteDraftContent 
-  | PromissoryNoteRequestedConfirmContent 
-  | PromissoryNotePendingActivationContent 
-  | PromissoryNoteEndedContent 
-  | PromissoryNoteActivatedContent;
+export type LoanContractResponse =
+  LoanContractDraftContent
+  | LoanContractRequestedContent
+  | LoanContractApprovedContent
+  | LoanContractActivatedContent
+  | LoanContractRepayedContent;
 
-export interface PromissoryNoteDraftContent extends PromissoryNoteContent {
+export interface LoanContractDraftContent extends LoanContractContent {
   state: 'draft';
   borrower: User;
 }
 
-export interface PromissoryNoteRequestedConfirmContent extends PromissoryNoteContent {
-  state: 'requestedConfirm';
+export interface LoanContractRequestedContent extends LoanContractContent {
+  state: 'requested';
   borrower: User;
 }
 
-
-export interface PromissoryNotePendingActivationContent extends PromissoryNoteContent {
-  state: 'pendingActivation';
+export interface LoanContractApprovedContent extends LoanContractContent {
+  state: 'approved';
   lender: User;
   borrower: User;
 }
 
-
-export interface PromissoryNoteEndedContent extends PromissoryNoteContent {
-  state: 'ended';
-  lender: User;
-  borrower: User;
-}
-
-
-export interface PromissoryNoteActivatedContent extends PromissoryNoteContent {
+export interface LoanContractActivatedContent extends LoanContractContent {
   state: 'activated';
+  lender: User;
+  borrower: User;
+}
+export interface LoanContractRepayedContent extends LoanContractContent {
+  state: 'repayed';
   lender: User;
   borrower: User;
 }

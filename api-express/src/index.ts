@@ -1,5 +1,5 @@
-import { User, PromissoryNoteRecord, PromissoryNoteResponse, PromissoryNoteDraftContent } from "./types";
-import { AuthorizedRequest, GetNoteRequest, RequestNoteRequest, RequestNoteBody } from "./requestTypes";
+import { User, LoanContractRecord, LoanContractResponse, LoanContractDraftContent } from "./types";
+import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
 
 const express = require('express')
 const morgan = require('morgan')
@@ -23,12 +23,12 @@ const userById: Partial<{ [key: string]: User }> = {
   }
 }
 
-let nextNoteId = 2;
+let nextContractId = 2;
 const getNextId = () => {
-  nextNoteId++;
-  return String(nextNoteId - 1);
+  nextContractId++;
+  return String(nextContractId - 1);
 }
-const notes: PromissoryNoteRecord[] = [
+const contracts: LoanContractRecord[] = [
   {
     id: "0",
     purpose: "서울에서 전세 구하기",
@@ -52,17 +52,17 @@ const notes: PromissoryNoteRecord[] = [
     state: "activated",
   },
   ...[...Array(10)].map((_, index) => (
-      {
-        id: String(index + 10),
-        purpose: "급한 소액대출 불끄기",
-        amount: 1000000,
-        createdAt: new Date().toISOString(),
-        contractDate: "",
-        paybackDate: "",
-        borrowerId: "123",
-        lenderId: "999",
-        state: "activated" as const,
-      }
+    {
+      id: String(index + 10),
+      purpose: "급한 소액대출 불끄기",
+      amount: 1000000,
+      createdAt: new Date().toISOString(),
+      contractDate: "",
+      paybackDate: "",
+      borrowerId: "123",
+      lenderId: "999",
+      state: "activated" as const,
+    }
   ))
 ];
 
@@ -70,12 +70,12 @@ const findUserById = (id: string) => {
   return userById[id];
 }
 
-const findNotesOfUser = (userId: string) => {
-  return notes.filter(({ borrowerId, lenderId }) => borrowerId === userId || lenderId === userId);
+const findContractsOfUser = (userId: string) => {
+  return contracts.filter(({ borrowerId, lenderId }) => borrowerId === userId || lenderId === userId);
 }
 
-const createDraftNote = (userId: string, data: RequestNoteBody) => {
-  const note: PromissoryNoteRecord = {
+const createDraftContract = (userId: string, data: RequestContractBody) => {
+  const contract: LoanContractRecord = {
     ...data,
     id: getNextId(),
     createdAt: new Date().toISOString(),
@@ -84,20 +84,20 @@ const createDraftNote = (userId: string, data: RequestNoteBody) => {
     lenderId: "",
     state: "draft"
   };
-  notes.push(note);
-  return note;
+  contracts.push(contract);
+  return contract;
 }
 
-const requestConfirm = (noteId: string) => {
-  findNoteById(noteId).state = "requestedConfirm";
+const requestApproval = (contractId: string) => {
+  findContractById(contractId).state = "requested";
 };
 
-const findNoteById = (id: string) => {
-  return notes.find(note => note.id === id);
+const findContractById = (id: string) => {
+  return contracts.find(contract => contract.id === id);
 }
 
-const enrichNote: (note: PromissoryNoteRecord) => PromissoryNoteResponse = (note) => (
-  { ...note, borrower: findUserById(note.borrowerId), lender: findUserById(note.lenderId) }
+const enrichContract: (contract: LoanContractRecord) => LoanContractResponse = (contract) => (
+  { ...contract, borrower: findUserById(contract.borrowerId), lender: findUserById(contract.lenderId) }
 )
 
 app.use(cors())
@@ -118,30 +118,30 @@ app.get('/user', (req: AuthorizedRequest, res) => {
   res.json(req.user)
 });
 
-app.get('/notes', (req: AuthorizedRequest, res) => {
-  res.json(findNotesOfUser(req.user.id).map(enrichNote));
+app.get('/contracts', (req: AuthorizedRequest, res) => {
+  res.json(findContractsOfUser(req.user.id).map(enrichContract));
 });
 
-app.get('/notes/:id', (req: GetNoteRequest, res) => {
-  const note = findNoteById(req.params.id);
-  if (note) {
-    res.status(200).json(enrichNote(note));
+app.get('/contracts/:id', (req: GetContractRequest, res) => {
+  const contract = findContractById(req.params.id);
+  if (contract) {
+    res.status(200).json(enrichContract(contract));
   } else {
     res.status(404).send('Not Found');
   }
 })
 
-app.post('/notes', (req: RequestNoteRequest, res) => {
-  const draftNote = createDraftNote(req.user.id, req.body);
-  requestConfirm(draftNote.id);
-  res.status(200).json(draftNote);
+app.post('/contracts', (req: RequestContractRequest, res) => {
+  const draftContract = createDraftContract(req.user.id, req.body);
+  requestApproval(draftContract.id);
+  res.status(200).json(draftContract);
 })
 
-app.post('/notes/:id/confirm', (req, res) => {
+app.post('/contracts/:id/confirm', (req, res) => {
 
 });
 
-app.post('/notes/:id/reject', (req, res) => {
+app.post('/contracts/:id/reject', (req, res) => {
 
 });
 

@@ -3,20 +3,20 @@ export interface AuthorizedRequest {
   user: User;
 }
 
-export interface GetNoteParams {
+export interface GetContractParams {
   id: string;
 };
 
-export interface GetNoteRequest extends AuthorizedRequest {
-  params: GetNoteParams;
+export interface GetContractRequest extends AuthorizedRequest {
+  params: GetContractParams;
 }
 
-export interface RequestNoteBody {
+export interface RequestContractBody {
   amount: number;
   paybackDate: string;
   purpose: string;
 }
 
-export interface RequestNoteRequest extends AuthorizedRequest {
-  body: RequestNoteBody
+export interface RequestContractRequest extends AuthorizedRequest {
+  body: RequestContractBody
 }
