@@ -1,9 +1,10 @@
-import { User, PromissoryNoteRecord, PromissoryNoteResponse } from "./types";
-import { AuthorizedRequest, GetNoteRequest } from "./requestTypes";
+import { User, PromissoryNoteRecord, PromissoryNoteResponse, PromissoryNoteDraftContent } from "./types";
+import { AuthorizedRequest, GetNoteRequest, RequestNoteRequest, RequestNoteBody } from "./requestTypes";
 
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors');
+const bodyParser = require('body-parser')
 
 const app = express();
 
@@ -22,7 +23,11 @@ const userById: Partial<{ [key: string]: User }> = {
   }
 }
 
-const nextNoteId = 2;
+let nextNoteId = 2;
+const getNextId = () => {
+  nextNoteId++;
+  return String(nextNoteId - 1);
+}
 const notes: PromissoryNoteRecord[] = [
   {
     id: "0",
@@ -56,6 +61,24 @@ const findNotesOfUser = (userId: string) => {
   return notes.filter(({ borrowerId, lenderId }) => borrowerId === userId || lenderId === userId);
 }
 
+const createDraftNote = (userId: string, data: RequestNoteBody) => {
+  const note: PromissoryNoteRecord = {
+    ...data,
+    id: getNextId(),
+    createdAt: new Date().toISOString(),
+    contractDate: "",
+    borrowerId: userId,
+    lenderId: "",
+    state: "draft"
+  };
+  notes.push(note);
+  return note;
+}
+
+const requestConfirm = (noteId: string) => {
+  findNoteById(noteId).state = "requestedConfirm";
+};
+
 const findNoteById = (id: string) => {
   return notes.find(note => note.id === id);
 }
@@ -66,6 +89,7 @@ const enrichNote: (note: PromissoryNoteRecord) => PromissoryNoteResponse = (note
 
 app.use(cors())
 app.use(morgan('dev'))
+app.use(bodyParser.json());
 app.use((req, res, next) => {
   const id = req.headers.authorization;
   const user = findUserById(id);
@@ -93,6 +117,20 @@ app.get('/notes/:id', (req: GetNoteRequest, res) => {
     res.status(404).send('Not Found');
   }
 })
+
+app.post('/notes', (req: RequestNoteRequest, res) => {
+  const draftNote = createDraftNote(req.user.id, req.body);
+  requestConfirm(draftNote.id);
+  res.status(200).json(draftNote);
+})
+
+app.post('/notes/:id/confirm', (req, res) => {
+
+});
+
+app.post('/notes/:id/reject', (req, res) => {
+
+});
 
 app.listen(8080, () => {
   console.log('Server started at port 8080')
