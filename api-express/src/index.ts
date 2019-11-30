@@ -11,7 +11,7 @@ const app = express();
 const userById: Partial<{ [key: string]: User }> = {
   "123": {
     id: '123',
-    name: 'John',
+    name: '김삿갓',
     score: 100,
     grade: UserCreditGrade.Normal
   },
@@ -23,7 +23,7 @@ const userById: Partial<{ [key: string]: User }> = {
   },
   "999": {
     id: '999',
-    name: '김정은',
+    name: '김첨지',
     score: 900,
     grade: UserCreditGrade.Safe
   }
@@ -38,53 +38,53 @@ const getDate = (afterDay: number) => {
   return new Date(new Date().getTime() + afterDay * 24 * 3600 * 1000).toISOString();
 }
 const contracts: LoanContractRecord[] = [
-  {
-    id: "0",
-    purpose: "서울에서 전세 구하기",
-    amount: 9000000,
-    createdAt: getDate(0),
-    contractDate: "",
-    paybackDate: "",
-    borrowerId: "123",
-    lenderId: "",
-    state: LoanContractState.Draft,
-  },
-  {
-    id: "1",
-    purpose: "급한 소액대출 불끄기",
-    amount: 1000000,
-    createdAt: getDate(1),
-    contractDate: "",
-    paybackDate: "",
-    borrowerId: "999",
-    lenderId: "123",
-    state: LoanContractState.Activated,
-  },
-  {
-    id: "2",
-    purpose: "집에 가고 싶어서 택시비 빌려줘",
-    amount: 10000,
-    createdAt: getDate(2),
-    contractDate: "",
-    paybackDate: "",
-    borrowerId: "999",
-    lenderId: "123",
-    state: LoanContractState.Requested,
-  },
-  {
-    id: "3",
-    purpose: "부자되게해주세요",
-    amount: 100000000,
-    createdAt: getDate(3),
-    contractDate: "",
-    paybackDate: "",
-    borrowerId: "123",
-    lenderId: "999",
-    state: LoanContractState.Approved,
-  },
+  // {
+  //   id: "0",
+  //   purpose: "서울에서 전세 구하기",
+  //   amount: 9000000,
+  //   createdAt: getDate(0),
+  //   contractDate: "",
+  //   paybackDate: "",
+  //   borrowerId: "123",
+  //   lenderId: "",
+  //   state: LoanContractState.Draft,
+  // },
+  // {
+  //   id: "1",
+  //   purpose: "급한 소액대출 불끄기",
+  //   amount: 1000000,
+  //   createdAt: getDate(1),
+  //   contractDate: "",
+  //   paybackDate: "",
+  //   borrowerId: "999",
+  //   lenderId: "123",
+  //   state: LoanContractState.Activated,
+  // },
+  // {
+  //   id: "2",
+  //   purpose: "집에 가고 싶어서 택시비 빌려줘",
+  //   amount: 10000,
+  //   createdAt: getDate(2),
+  //   contractDate: "",
+  //   paybackDate: "",
+  //   borrowerId: "999",
+  //   lenderId: "123",
+  //   state: LoanContractState.Requested,
+  // },
+  // {
+  //   id: "3",
+  //   purpose: "부자되게해주세요",
+  //   amount: 100000000,
+  //   createdAt: getDate(3),
+  //   contractDate: "",
+  //   paybackDate: "",
+  //   borrowerId: "123",
+  //   lenderId: "999",
+  //   state: LoanContractState.Approved,
+  // },
   {
     id: "4",
-    purpose: "멕시코 타코 살사 소스",
+    purpose: "급한 소액대출 불끄기",
     amount: 1000000,
     createdAt: getDate(4),
     contractDate: "",
@@ -93,19 +93,30 @@ const contracts: LoanContractRecord[] = [
     lenderId: "999",
     state: LoanContractState.Repayed,
   },
-  ...[...Array(10)].map((_, index) => (
-    {
-      id: String(index + 10),
-      purpose: "급한 소액대출 불끄기",
-      amount: 1000000,
-      createdAt: getDate(index + 10),
-      contractDate: "",
-      paybackDate: "",
-      borrowerId: "123",
-      lenderId: "999",
-      state: LoanContractState.Activated,
-    }
-  ))
+  {
+    id: "5",
+    purpose: "서울에서 전세 구하기",
+    amount: 5000000,
+    createdAt: getDate(10),
+    contractDate: "",
+    paybackDate: "",
+    borrowerId: "123",
+    lenderId: "999",
+    state: LoanContractState.Repayed,
+  },
+  // ...[...Array(10)].map((_, index) => (
+  //   {
+  //     id: String(index + 10),
+  //     purpose: "급한 소액대출 불끄기",
+  //     amount: 1000000,
+  //     createdAt: getDate(index + 10),
+  //     contractDate: "",
+  //     paybackDate: "",
+  //     borrowerId: "123",
+  //     lenderId: "999",
+  //     state: LoanContractState.Activated,
+  //   }
+  // ))
 ];
 
 const timestamp = (isoDate: string) => new Date(isoDate).getTime();
