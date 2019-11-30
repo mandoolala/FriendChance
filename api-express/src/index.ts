@@ -1,4 +1,4 @@
-import { User, LoanContractRecord, LoanContractResponse } from "./types";
+import { User, LoanContractRecord, LoanContractResponse, LoanContractState } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
 
 const express = require('express')
@@ -28,76 +28,81 @@ const getNextId = () => {
   nextContractId++;
   return String(nextContractId - 1);
 }
+const getDate = (afterDay: number) => {
+  return new Date(new Date().getTime() + afterDay * 24 * 3600 * 1000).toISOString();
+}
 const contracts: LoanContractRecord[] = [
   {
     id: "0",
     purpose: "서울에서 전세 구하기",
     amount: 9000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(0),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
     lenderId: "",
-    state: "draft",
+    state: LoanContractState.Draft,
   },
   {
     id: "1",
     purpose: "급한 소액대출 불끄기",
     amount: 1000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(1),
     contractDate: "",
     paybackDate: "",
-    borrowerId: "123",
-    lenderId: "999",
-    state: "activated",
+    borrowerId: "999",
+    lenderId: "123",
+    state: LoanContractState.Activated,
   },
   {
     id: "2",
     purpose: "집에 가고 싶어서 택시비 빌려줘",
     amount: 10000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(2),
     contractDate: "",
     paybackDate: "",
-    borrowerId: "123",
-    lenderId: "",
-    state: "requested",
+    borrowerId: "999",
+    lenderId: "123",
+    state: LoanContractState.Requested,
   },
   {
     id: "3",
     purpose: "부자되게해주세요",
     amount: 100000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(3),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "approved",
+    state: LoanContractState.Approved,
   },
   {
     id: "4",
     purpose: "멕시코 타코 살사 소스",
     amount: 1000000,
-    createdAt: new Date().toISOString(),
+    createdAt: getDate(4),
     contractDate: "",
     paybackDate: "",
     borrowerId: "123",
     lenderId: "999",
-    state: "repayed",
+    state: LoanContractState.Repayed,
   },
   ...[...Array(10)].map((_, index) => (
     {
       id: String(index + 10),
       purpose: "급한 소액대출 불끄기",
       amount: 1000000,
-      createdAt: new Date().toISOString(),
+      createdAt: getDate(index + 10),
       contractDate: "",
       paybackDate: "",
       borrowerId: "123",
       lenderId: "999",
-      state: "activated" as const,
+      state: LoanContractState.Activated,
     }
   ))
 ];
+
+const timestamp = (isoDate: string) => new Date(isoDate).getTime();
 
 const findUserById = (id: string) => {
   return userById[id];
@@ -115,14 +120,14 @@ const createDraftContract = (userId: string, data: RequestContractBody) => {
     contractDate: "",
     borrowerId: userId,
     lenderId: "",
-    state: "draft"
+    state: LoanContractState.Draft
   };
   contracts.push(contract);
   return contract;
 }
 
 const requestApproval = (contractId: string) => {
-  findContractById(contractId).state = "requested";
+  findContractById(contractId).state = LoanContractState.Requested;
 };
 
 const findContractById = (id: string) => {
@@ -152,7 +157,9 @@ app.get('/user', (req: AuthorizedRequest, res) => {
 });
 
 app.get('/contracts', (req: AuthorizedRequest, res) => {
-  res.json(findContractsOfUser(req.user.id).map(enrichContract));
+  const result = findContractsOfUser(req.user.id).map(enrichContract);
+  result.sort((loanA, loanB) => timestamp(loanB.createdAt) - timestamp(loanA.createdAt));
+  res.json(result);
 });
 
 app.get('/contracts/:id', (req: GetContractRequest, res) => {
@@ -170,14 +177,69 @@ app.post('/contracts', (req: RequestContractRequest, res) => {
   res.status(200).json(draftContract);
 })
 
-app.post('/contracts/:id/confirm', (req, res) => {
-
+app.post('/contracts/:id/approve', (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Requested) {
+    res.status(400).send("Loan not requested");
+  } else if (contract.borrowerId === userId) {
+    res.status(400).send("You cannot lend money to yourself");
+  } else {
+    contract.state = LoanContractState.Approved;
+    contract.lenderId = userId;
+    res.status(200).json(contract);
+  }
+  
 });
 
 app.post('/contracts/:id/reject', (req, res) => {
-
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Requested) {
+    res.status(400).send("Loan not requested");
+  } else if (contract.borrowerId === userId) {
+    res.status(400).send("You cannot lend money to yourself");
+  } else {
+    contract.state = LoanContractState.Draft;
+    res.status(200).json(contract);
+  }
 });
 
-app.listen(8080, () => {
-  console.log('Server started at port 8080')
+app.post('/contracts/:id/activate', (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Approved) {
+    res.status(400).send("Loan not approved");
+  } else if (contract.lenderId !== userId) {
+    res.status(400).send("You cannot lend money to this loan");
+  } else {
+    // TODO:: Validating the transaction?
+    contract.state = LoanContractState.Activated;
+    res.status(200).json(contract);
+  }
+});
+
+app.post('/contracts/:id/repay', (req, res) => {
+  const contractId = req.params.id;
+  const userId = req.user.id;
+  const contract = findContractById(contractId);
+  if (contract.state !== LoanContractState.Activated) {
+    res.status(400).send("Loan not activated");
+  } else if (contract.borrowerId !== userId) {
+    res.status(400).send("You don't own this loan");
+  } else {
+    // TODO:: Validating the transaction?
+    contract.state = LoanContractState.Repayed;
+    res.status(200).json(contract);
+  }
+  
+});
+
+const PORT = Number(process.env.PORT) || 8080;
+
+app.listen(PORT, () => {
+  console.log('Server started at port ' + PORT);
 })

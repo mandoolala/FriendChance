@@ -1,11 +1,12 @@
 
 type UserId = string;
-
-export type Draft = 'draft';
-export type Requested = 'requested';
-export type Approved = 'approved';
-export type Activated = 'activated';
-export type Repayed = 'repayed';
+export enum LoanContractState {
+  Draft = 'draft',
+  Requested = 'requested',
+  Approved = 'approved',
+  Activated = 'activated',
+  Repayed = 'repayed',
+}
 
 export interface User {
   id: UserId;
@@ -19,7 +20,7 @@ export interface LoanContractContent {
   createdAt: string;
   contractDate: string;
   paybackDate: string;
-  state: Draft | Requested | Approved | Activated | Repayed;
+  state: LoanContractState;
 }
 
 export interface LoanContractRecord extends LoanContractContent {
@@ -41,28 +42,28 @@ export type LoanContractResponse =
   | LoanContractRepayedContent;
 
 export interface LoanContractDraftContent extends LoanContractContent {
-  state: 'draft';
+  state: LoanContractState.Draft;
   borrower: User;
 }
 
 export interface LoanContractRequestedContent extends LoanContractContent {
-  state: 'requested';
+  state: LoanContractState.Requested;
   borrower: User;
 }
 
 export interface LoanContractApprovedContent extends LoanContractContent {
-  state: 'approved';
+  state: LoanContractState.Approved;
   lender: User;
   borrower: User;
 }
 
 export interface LoanContractActivatedContent extends LoanContractContent {
-  state: 'activated';
+  state: LoanContractState.Activated;
   lender: User;
   borrower: User;
 }
 export interface LoanContractRepayedContent extends LoanContractContent {
-  state: 'repayed';
+  state: LoanContractState.Repayed;
   lender: User;
   borrower: User;
 }
