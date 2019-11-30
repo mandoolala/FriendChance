@@ -1,5 +1,6 @@
 import { User, LoanContractRecord, LoanContractResponse, LoanContractState } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
+import { web3 } from "../web3-config.js";
 
 const express = require('express')
 const morgan = require('morgan')
@@ -7,6 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 
 const app = express();
+//app.use(bodyParser.json());
 
 const userById: Partial<{ [key: string]: User }> = {
   "123": {
@@ -190,7 +192,7 @@ app.post('/contracts/:id/approve', (req, res) => {
     contract.lenderId = userId;
     res.status(200).json(contract);
   }
-  
+
 });
 
 app.post('/contracts/:id/reject', (req, res) => {
@@ -235,7 +237,7 @@ app.post('/contracts/:id/repay', (req, res) => {
     contract.state = LoanContractState.Repayed;
     res.status(200).json(contract);
   }
-  
+
 });
 
 const PORT = Number(process.env.PORT) || 8080;

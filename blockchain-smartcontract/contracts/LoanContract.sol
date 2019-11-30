@@ -83,6 +83,12 @@ contract LoanContract {
   //           contracts[_contractID].contractDate, contracts[_contractID].paybackDate);
   // }
 
+  function changeState(uint index, loanStatus newState) public returns (uint) {
+    Contract storage temp_contract = contractsList[index];
+    temp_contract.status = newState;
+    return index;
+  }
+  
   function createLoan(string memory _createdAt, string memory _paybackDate,
                       string memory _purpose, uint _borrowAmount, PersonInfo memory _borrower, PersonInfo memory _lender) public {
 

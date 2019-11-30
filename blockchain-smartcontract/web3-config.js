@@ -4,7 +4,7 @@ var fs = require('fs');
 const ganache = require("ganache-core");
 const Web3 = require('web3');
 //const web3 = new Web3(ganache.provider());
-const web3 = new Web3(ganache.provider() || "ws://localhost:8546");
+const web3 = new Web3(ganache.provider() || "ws://localhost:7545");
 
 //const truffleAssert = require('truffle-assertions');
 //const assert = require('assert');
@@ -17,13 +17,17 @@ const bytecode = json['bytecode'];
 bytecode = fs.readFileSync('loanContract.bin').toString();
 abi = JSON.parse(fs.readFileSync('loanContract.abi').toString());
 
-beforeEach(async () => {
-  //accounts = await web3.eth.getAccounts();
-  contracts = await web3.eth.getContracts();
+deployContract();
 
-  deployedContracts = await new web3.eth.Contract(interface)
-    .deploy({ data: bytecode })
-});
+function deployContract() {
+  console.log(web3.eth.accounts);
+  web3.eth.defaultAccount = web3.eth.accounts[0];
+  var loanContract = web3.eth.contract(abi);
+  loanContract.new({
+    data: bytecode,
+    from: web3.eth.defaultAccount
+  });
+};
 
 const getContractInstance = (web3) => (LoanContract) => {
   const artifact = artifacts.require(LoanContract)
@@ -32,6 +36,10 @@ const getContractInstance = (web3) => (LoanContract) => {
   return instance
 }
 
+module.exports = { web3, getContractInstance }
+
+
+
 // describe('loanContract', () => {
 //   it('deploys a contract', async () => {
 //     const borrower = await auction.methods.msg.sender.call();
@@ -39,5 +47,4 @@ const getContractInstance = (web3) => (LoanContract) => {
 //   });
 });
 
-module.exports = { getWeb3, getContractInstance }
 
