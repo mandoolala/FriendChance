@@ -1,0 +1,31 @@
+pragma solidity >=0.4.21 <0.6.0;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/LoanContracts.sol";
+
+contract TestLoanContract {
+    // function testCreateNewContract() public {
+    //     LoanContract loancontract = LoanContract(DeployedAddressesLoanContract());
+
+    //     uint expected = 10000;
+
+    //     Assert.equal(
+    //         meta.getBalance(msg.sender),
+    //         expected,
+    //         "Owner should have 10000 MetaCoin initially"
+    //     );
+    // }
+
+    // function testInitialBalanceWithNewMetaCoin() public {
+    //     MetaCoin meta = new MetaCoin();
+
+    //     uint expected = 10000;
+
+    //     Assert.equal(
+    //         meta.getBalance(address(this)),
+    //         expected,
+    //         "Owner should have 10000 MetaCoin initially"
+    //     );
+    // }
+}

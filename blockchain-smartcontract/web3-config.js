@@ -1,23 +1,25 @@
 var fs = require('fs');
-const assert = require('assert');
+
+
 const ganache = require('ganache - cli');
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
+
+const truffleAssert = require('truffle-assertions');
+const assert = require('assert');
+
 const json = require('./../build/contracts/Contracts.json');
 
-let deployedContracts;
 const interface = json['abi'];
 const bytecode = json['bytecode'];
 
 bytecode = fs.readFileSync('loanContract_sol.bin').toString();
 abi = JSON.parse(fs.readFileSync('loanContract_sol.abi').toString());
 
-
 beforeEach(async () => {
-  web3.eth.getAccounts(console.log);
+  accounts = await web3.eth.getAccounts();
   contracts = await web3.eth.getContracts();
-  lender = accounts[0];
-  borrower = accounts[1];
+
   deployedContracts = await new web3.eth.Contract(interface)
     .deploy({ data: bytecode })
 });
