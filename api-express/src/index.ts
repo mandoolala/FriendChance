@@ -86,7 +86,7 @@ const contracts: LoanContractRecord[] = [
     id: "4",
     purpose: "급한 소액대출 불끄기",
     amount: 1000000,
-    createdAt: getDate(4),
+    createdAt: getDate(-4),
     contractDate: "",
     paybackDate: "2019-12-30",
     borrowerId: "123",
