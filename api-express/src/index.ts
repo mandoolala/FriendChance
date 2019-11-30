@@ -22,9 +22,11 @@ console.log(accountaddress);
 
 var contractaddress = '0xFd969277ac9c6F581B99E9A51eB3eE115d49F501';
 
-const networkId = web3.eth.net.getId();
-const networkData = loanjson.networks[networkId];
-var smartcontract = new web3.eth.Contract(loanjson.abi, networkData.address);
+var smartcontract; 
+web3.eth.net.getId().then(networkId => {
+  const networkData = loanjson.networks[networkId];
+  smartcontract = new web3.eth.Contract(loanjson.abi, networkData.address);
+});
 
 const app = express();
 
