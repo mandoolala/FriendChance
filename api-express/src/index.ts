@@ -1,4 +1,4 @@
-import { User, LoanContractRecord, LoanContractResponse, LoanContractState } from "./types";
+import { User, LoanContractRecord, LoanContractResponse, LoanContractState, UserCreditGrade } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
 
 const express = require('express')
@@ -12,17 +12,20 @@ const userById: Partial<{ [key: string]: User }> = {
   "123": {
     id: '123',
     name: 'John',
-    score: 100
+    score: 100,
+    grade: UserCreditGrade.Normal
   },
   "000": {
     id: '000',
     name: 'Jill',
-    score: 0
+    score: 0,
+    grade: UserCreditGrade.Danger
   },
   "999": {
     id: '999',
     name: '김정은',
-    score: 900
+    score: 900,
+    grade: UserCreditGrade.Safe
   }
 }
 

@@ -8,10 +8,17 @@ export enum LoanContractState {
   Repayed = 'repayed',
 }
 
+export enum UserCreditGrade {
+  Safe = 'safe',
+  Normal = 'normal',
+  Danger = 'danger'
+}
+
 export interface User {
   id: UserId;
   name: string;
   score: number;
+  grade: UserCreditGrade;
 }
 
 export interface LoanContractContent {
