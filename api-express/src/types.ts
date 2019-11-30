@@ -11,6 +11,7 @@ export enum LoanContractState {
 export interface User {
   id: UserId;
   name: string;
+  score: number;
 }
 
 export interface LoanContractContent {

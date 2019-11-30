@@ -11,15 +11,18 @@ const app = express();
 const userById: Partial<{ [key: string]: User }> = {
   "123": {
     id: '123',
-    name: 'John'
+    name: 'John',
+    score: 100
   },
   "000": {
     id: '000',
-    name: 'Jill'
+    name: 'Jill',
+    score: 0
   },
   "999": {
     id: '999',
-    name: '김정은'
+    name: '김정은',
+    score: 900
   }
 }
 
