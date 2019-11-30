@@ -1,5 +1,6 @@
 import { User, LoanContractRecord, LoanContractResponse, LoanContractState, UserCreditGrade } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
+import { Router } from "express";
 
 const express = require('express')
 const morgan = require('morgan')
@@ -177,13 +178,22 @@ app.get('/contracts/:id', (req: GetContractRequest, res) => {
   }
 })
 
-app.post('/contracts', (req: RequestContractRequest, res) => {
+const updateRouter = Router();
+
+updateRouter.use((req, res, next) => {
+  next();
+  wss.clients.forEach(ws => {
+    ws.send("update");
+  })
+});
+
+updateRouter.post('/contracts', (req: any, res) => {
   const draftContract = createDraftContract(req.user.id, req.body);
   requestApproval(draftContract.id);
   res.status(200).json(draftContract);
 })
 
-app.post('/contracts/:id/approve', (req, res) => {
+updateRouter.post('/contracts/:id/approve', (req: any, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
@@ -199,7 +209,7 @@ app.post('/contracts/:id/approve', (req, res) => {
   
 });
 
-app.post('/contracts/:id/reject', (req, res) => {
+updateRouter.post('/contracts/:id/reject', (req: any, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
@@ -213,7 +223,7 @@ app.post('/contracts/:id/reject', (req, res) => {
   }
 });
 
-app.post('/contracts/:id/activate', (req, res) => {
+updateRouter.post('/contracts/:id/activate', (req: any, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
@@ -228,7 +238,7 @@ app.post('/contracts/:id/activate', (req, res) => {
   }
 });
 
-app.post('/contracts/:id/repay', (req, res) => {
+updateRouter.post('/contracts/:id/repay', (req: any, res) => {
   const contractId = req.params.id;
   const userId = req.user.id;
   const contract = findContractById(contractId);
@@ -242,6 +252,34 @@ app.post('/contracts/:id/repay', (req, res) => {
     res.status(200).json(contract);
   }
   
+});
+
+app.use(updateRouter);
+
+const WebSocket = require('ws');
+
+const WS_PORT = Number(process.env.WS_PORT) || 7070;
+const wss = new WebSocket.Server({
+  port: WS_PORT,
+  perMessageDeflate: {
+    zlibDeflateOptions: {
+      // See zlib defaults.
+      chunkSize: 1024,
+      memLevel: 7,
+      level: 3
+    },
+    zlibInflateOptions: {
+      chunkSize: 10 * 1024
+    },
+    // Other options settable:
+    clientNoContextTakeover: true, // Defaults to negotiated value.
+    serverNoContextTakeover: true, // Defaults to negotiated value.
+    serverMaxWindowBits: 10, // Defaults to negotiated value.
+    // Below options specified as default values.
+    concurrencyLimit: 10, // Limits zlib concurrency for perf.
+    threshold: 1024 // Size (in bytes) below which messages
+    // should not be compressed.
+  }
 });
 
 const PORT = Number(process.env.PORT) || 8080;
