@@ -1,5 +1,6 @@
 import { User, LoanContractRecord, LoanContractResponse, LoanContractState, UserCreditGrade } from "./types";
 import { AuthorizedRequest, GetContractRequest, RequestContractRequest, RequestContractBody } from "./requestTypes";
+import { Router } from "express";
 
 var fs = require('fs')
 const express = require('express')
