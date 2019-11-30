@@ -33,7 +33,7 @@ contract LoanContract {
     string borrowCondition;
 
     string createdAt; //초안 생긴 시점
-    string contractDate; //효력이 생기는 시점
+    uint256 contractDate; //효력이 생기는 시점
     string paybackDate; // 돈 갚을 날짜
 
     bool borrower_signature; 
@@ -215,7 +215,7 @@ contract LoanContract {
     return string(bytesString);
   }
 
-  function() public{
+  function() external{
     revert();
   }
 
