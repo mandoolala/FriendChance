@@ -1,0 +1,264 @@
+.my-notes {
+  display: flex;
+  flex-direction: column;
+
+  .title-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    top: 0px;
+    width: 100%;
+
+    .title-go-back-text {
+      height: 20px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+    }
+
+    .title-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: white;
+      
+      height: 100px;
+      
+      .title {
+        padding-left: 15px;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .my-notes-content-container {
+    display: flex;
+    flex-direction: column;
+
+    .my-note-content-user-tab {
+      position: sticky;
+      top: 0px;
+      padding: 0 15px;
+      background-color: white;
+      box-shadow: 0px 5px 5px rgba(0,0,0,0.1);
+
+      .my-note-content-user-info-row {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .my-note-avatar {
+          background-color: green;
+          width: 30px;
+          height: 30px;
+          border-radius: 15px;
+          background: cover;
+        }
+
+        .my-note-user-name {
+          margin-left: 10px;
+          font-size: 1.1rem;
+          font-weight: bold;
+        }
+
+        .my-note-user-score {
+          position: absolute;
+          right: 15px;
+          font-size: 0.8rem;
+          font-weight: bold;
+          color: white;
+          padding: 4px;
+          border-radius: 5px;
+
+          &.normal {
+            background-color: rgb(245, 199, 71);
+          }
+
+          &.danger {
+            background-color: red;
+          }
+
+          &.safe {
+            background-color: rgb(95, 145, 76);
+          }
+        }
+      }
+
+
+      .my-notes-all-debts-container {
+        margin-top: 20px;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        .my-notes-all-debts-text {
+          margin-left: 5px;
+          font-weight: bold;
+          
+          .all-debts-good {
+            color: green;
+          }
+          
+          .all-debts-bad {
+            color: red;
+          }
+        }
+        
+        .my-notes-all-debts-title {
+          position: absolute;
+          right: 15px;
+          font-size: 0.8rem;
+
+          &.good {
+            color: green;
+          }
+
+          &.bad {
+            color: red;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .add {
+      position: fixed;
+      bottom: 0;
+      cursor: pointer;
+      height: calc(60px + env(safe-area-inset-bottom));
+      width: 100%;
+      background-color: #FFDED6;
+      border: none;
+      font-size: 1rem;
+      color: #FF7070;
+
+      .add-text {
+        width: 100%;
+        text-align: center;
+        padding-top: 20px;
+        font-weight: bold;
+      }
+    }
+
+    .list-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+
+      margin-bottom: 150px;
+      margin-top: 15px;
+  
+      .list-item {
+        height: 100px;
+        margin: 5px 15px;
+        border: 1px solid #333333;
+        border-radius: 10px;
+        border: none;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;;
+
+        // 차용증 작성 중
+        &.draft, &.rejected {
+          background-color: #E8E8E8;
+          color: black;
+        }
+
+        // 차용증 승인 완료 대기 중
+        &.requested {
+          background-color: #BABABA;
+        }
+
+        // 대출 대기 중
+        &.approved, &.activated {
+          &.true {
+            background-color: #FF7071;
+            color: #FFDED6;
+            box-shadow: 0px 5px 8px rgba(207, 68, 71, 0.33);
+          }
+
+          &.false {
+            background-color: #A275C8;
+            color: #C7F8FF;
+            box-shadow: 0px 5px 8px rgba(115, 42, 141, 0.33);
+          }
+        }
+
+        // 상환 완료
+        &.repayed {
+          background-color: #BFEBAD;
+          color: rgb(75, 109, 62);
+        }
+
+        .list-item-text-container {
+          padding: 15px;
+
+          .list-item-date-text {
+            font-size: 11px;
+            margin-bottom: 7px;
+          }
+
+          .list-item-title-text {
+            font-size: 14px;
+          }
+
+          .list-item-amount-text {
+            font-size: 25px;
+            font-weight: bold;
+          }
+        }
+
+        .list-item-image-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          width: 150px;
+
+          .list-item-image {
+            &.horizon {
+              height: 10px;
+              width: 150px;
+
+              &.approved, &.activated {
+                &.true {
+                  background-color: #FFDED6;
+                }
+
+                &.false {
+                  background-color: #B3E8EF;
+                }
+              }
+            }
+
+            &.vertical {
+              height: 45px;
+              width: 10px;
+
+              &.approved, &.activated {
+                &.true {
+                  background-color: transparent;
+                }
+
+                &.false {
+                  background-color: #B3E8EF;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

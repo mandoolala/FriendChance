@@ -1,0 +1,94 @@
+.send-money {
+  display: flex;
+  flex-direction: column;
+  background-color: #FF7071;
+  height: 100%;
+
+  .title-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    top: 0px;
+    width: 100%;
+    color: white;
+
+    .title-go-back-text {
+      height: 20px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+    }
+
+    .title-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: #FF7071;
+      
+      height: 100px;
+      
+      .title {
+        padding-left: 15px;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .send-money-content-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 30px;
+
+    .send-money-content-description {
+      margin-bottom: 50px;
+
+      .send-money-content-borrower-name {
+        color: #FFD6D6;
+        font-size: 1.3rem;
+      }
+
+      .send-money-content-amount {
+        font-size: 2rem;
+        color: white;
+        font-weight: bold;
+      }
+    }
+
+    .pay-button {
+      width: 100%;
+      border: none;
+      outline: none;
+      height: 60px;
+      font-size: 1.1rem;
+      font-weight: bold;
+
+      border-radius: 10px;
+
+      margin-bottom :15px;
+      box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+
+      &.kakao {
+        background-color: #F7E600;
+      }
+
+      &.toss {
+        background-color: #0051FF;
+        color: white;
+      }
+    }
+
+    .send-money-back-button {
+      left: 0px;
+      width: 100%;
+      height: 70px;
+      border: none;
+      outline: none;
+      background-color: #EE4F4F;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 35px;
+    }
+  }
+}
