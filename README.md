@@ -3,6 +3,8 @@
 ###### 제7회 핀테크×인슈어테크 해커톤 (11/29~11/30) 16팀 지킬건기키자 <김예준 정진우 박진영 강민주>
 ###### 블록체인 기술 기반 차용증 발급을 통한 개인 간 안심 금전 거래 서비스
 
+![ScreenShot](https://raw.github.com/mandoolala/FriendChance/master/screenshot.png?raw=true)
+
 ### start server
 
 in api-express directory:
