@@ -14,13 +14,14 @@ const Web3 = require('web3');
 const web3 = new Web3(ganache.provider() || "ws://localhost:7545");
 
 const loanjson = require('../../blockchain-smartcontract/build/contracts/LoanContract.json');
-var abi = loanjson['abi'];
+//var abi = loanjson['abi'];
 
 web3.eth.defaultAccount = web3.eth.accounts[0];
-var accountaddress = web3.eth.accounts[0];
-console.log(accountaddress);
-
-var contractaddress = '0xFd969277ac9c6F581B99E9A51eB3eE115d49F501';
+//var accountaddress = web3.eth.accounts[0];
+//var contractaddress = '0x7f99cAc81eb6188B858139505284d3C5DaEE5040';
+//const networkId = web3.eth.net.getId();
+//const networkData = loanjson.networks[networkId];
+//var smartcontract = new web3.eth.Contract(loanjson.abi, networkData.address);
 
 var smartcontract; 
 web3.eth.net.getId().then(networkId => {
@@ -155,8 +156,8 @@ const createDraftContract = (userId: string, data: RequestContractBody) => {
   contracts.push(contract);
 
   //add to blockchain
-  smartcontract.createLoan(contract.id, contract.createdAt, contract.purpose, contract.amount,
-    contract.paybackDate, contract.borrowerId);
+  //smartcontract.createLoan(contract.id, contract.createdAt, contract.purpose, contract.amount,
+  //contract.paybackDate, contract.borrowerId);
 
   return contract;
 }
@@ -164,7 +165,7 @@ const createDraftContract = (userId: string, data: RequestContractBody) => {
 const requestApproval = (contractId: string) => {
 
   //change state in blockchain
-  smartcontract.changeState(contractId, 'REQUESTED');
+  //smartcontract.changeState(contractId, 'REQUESTED');
 
   findContractById(contractId).state = LoanContractState.Requested;
 };
@@ -236,7 +237,7 @@ updateRouter.post('/contracts/:id/approve', (req: any, res) => {
   } else {
     contract.state = LoanContractState.Approved;
     //change state in blockchain
-    smartcontract.changeState(contractId, 'APPROVED');
+    //smartcontract.changeState(contractId, 'APPROVED');
 
     contract.lenderId = userId;
     res.status(200).json(contract);
@@ -268,8 +269,7 @@ updateRouter.post('/contracts/:id/activate', (req: any, res) => {
     res.status(400).send("You cannot lend money to this loan");
   } else {
     // TODO:: Validating the transaction?
-
-    smartcontract.changeState(contractId, 'ACTIVATED');
+    //smartcontract.changeState(contractId, 'ACTIVATED');
 
     contract.state = LoanContractState.Activated;
     res.status(200).json(contract);
