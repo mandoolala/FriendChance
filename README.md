@@ -4,6 +4,7 @@
 ###### 블록체인 기술 기반 차용증 발급을 통한 개인 간 안심 금전 거래 서비스
 
 ![ScreenShot](https://raw.github.com/mandoolala/FriendChance/master/screenshot.png?raw=true)
+![Screenshot](screenshot.png)
 
 ### start server
 
