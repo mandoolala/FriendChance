@@ -1,5 +1,28 @@
-# fintech-hackathon-2019
-convenient promissory note application between acquaintances using Blockchain
+#FriendChance <친구찬스>
+
+##### 제7회 핀테크×인슈어테크 해커톤
+
+##### 블록체인 기술 기반 차용증 발급을 통한 개인 간 안심 금전 거래 서비스
+
+### start server
+
+in api-express directory:
+
+`yarn install`
+
+`yarn start`
+
+`localhost:8080`
+
+### start client 
+
+in frontend directory:
+
+`npm install`
+
+`npm start`
+
+`localhost:3000`
 
 ### start Ethereum node
 
@@ -24,15 +47,15 @@ truffle migrate --network dev
 
 3) use ganache (prefered)
 
-init workspace and start blockchain in ganache GUI
+=> init workspace using truffle-config.js in ganache GUI
 
 or use ganache-cli to start ganache server 
 `ganache-cli "<mneonics>"`
 
 
-### init Loan Smart Contracts
+### deploy loan Smart Contract to blockchain
 
-in directory where truffle-config.js is located:
+where truffle-config.js is located:
 
 `truffle compile`
 
@@ -44,14 +67,11 @@ migrate contract to blockchain created by Ganache
 use this command when redo:
 `truffle migrate --reset --compile-all`
 
-Deploy Smart Contracts to local blockchain
-
-`npm run migrate:dev`
-
+`localhost:7545`
 
 ### testing
 
-use truffle console to write web3 command to call functions in loan smart contract
+use truffle console to write web3 commands to call functions in loan smart contract
 
 
 
