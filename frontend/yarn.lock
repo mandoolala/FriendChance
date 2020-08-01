@@ -898,6 +898,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.10.5", "@babel/runtime@^7.7.2":
+  version "7.11.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.0.tgz#f10245877042a815e07f7e693faff0ae9d3a2aac"
+  integrity sha512-qArkXsjJq7H+T86WrIFV0Fnu/tNOkZ4cgXmjkzAu3b/58D5mFIO8JH/y77t7C9q0OdDRdh9s7Ue5GasYssxtXw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.4.0", "@babel/template@^7.6.0", "@babel/template@^7.7.4":
   version "7.7.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.7.4.tgz#428a7d9eecffe27deac0a98e23bf8e3675d2a77b"
@@ -1298,6 +1305,13 @@
     "@svgr/plugin-svgo" "^4.3.1"
     loader-utils "^1.2.3"
 
+"@tanem/svg-injector@^8.0.35":
+  version "8.0.61"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-8.0.61.tgz#bb29d9d9143e85440beb9f1bd203e0512cf96889"
+  integrity sha512-C6zpZfjXFOSFJ195Z465KQR+9yazVX4k6NUjZlXK/MGw8sjQFuEDnF9qJukoD8OK7MUmfYAQncnFS4cvtMbN+w==
+  dependencies:
+    "@babel/runtime" "^7.10.5"
+
 "@types/babel__core@^7.1.0":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.3.tgz#e441ea7df63cd080dfcd02ab199e6d16a735fc30"
@@ -1330,6 +1344,11 @@
   integrity sha512-yGeB2dHEdvxjP0y4UbRtQaSkXJ9649fYCmIdRoul5kfAoGCwxuCbMhag0k3RPfnuh9kPGm8x89btcfDEXdVWGw==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/canvas-confetti@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@types/canvas-confetti/-/canvas-confetti-0.1.0.tgz#5adea661e03322498c32eb4f6a3e8e677e36dd11"
+  integrity sha512-LsnlT52tlm9IHHiYzzG3ti0LrxqyzMSzrFPHFHjDcsdhUfpTfL/76D2Wza7JcAnV9Z1wReyzdOmR8fMNWyO3vA==
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
@@ -2245,9 +2264,9 @@ bluebird@^3.5.5:
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
-  version "4.11.8"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
-  integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
+  version "4.11.9"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
+  integrity sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==
 
 body-parser@1.19.0:
   version "1.19.0"
@@ -2566,6 +2585,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30000989, can
   version "1.0.30001012"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001012.tgz#653ec635e815b9e0fb801890923b0c2079eb34ec"
   integrity sha512-7RR4Uh04t9K1uYRWzOJmzplgEOAXbfK72oVNokCdMzA67trrhPzy93ahKk1AWHiA0c58tD2P+NHqxrA8FZ+Trg==
+
+canvas-confetti@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/canvas-confetti/-/canvas-confetti-0.5.0.tgz#fd5c01d2a683a7f73f774fa16155ae7149dcbbd6"
+  integrity sha512-9DG+GTEZ8COPohiEsTEqxpdUjOYGdW6wuaFFvU3855BLaRprkE/lDcu3xr1dApCZUeetjAnUBjvlRbr+k2oR1Q==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -3684,9 +3708,9 @@ electron-to-chromium@^1.3.247, electron-to-chromium@^1.3.306:
   integrity sha512-IKDR/xCxKFhPts7h+VaSXS02Z1mznP3fli1BbXWXeN89i2gCzKraU8qLpEid8YzKcmZdZD3Mly3cn5/lY9xsBQ==
 
 elliptic@^6.0.0:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.2.tgz#05c5678d7173c049d8ca433552224a495d0e3762"
-  integrity sha512-f4x70okzZbIQl/NSRLkI/+tteV/9WqL98zx+SQ69KbXxmVrmjwsNUPn/gYJJ0sHvEak24cZgHIPegRePAtA/xw==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.3.tgz#cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6"
+  integrity sha512-IMqzv5wNQf+E6aHeIqATs0tOLeOTwj1QKbRcS3jBbYkl5oLAserA8yJTT7/VyHUYG91PRmPyeQDObKLPpeS4dw==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -8714,6 +8738,15 @@ react-scripts@3.2.0:
   optionalDependencies:
     fsevents "2.0.7"
 
+react-svg@^10.0.25:
+  version "10.0.26"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.26.tgz#c81a30f9ac6e333c65ae5976d5fc72c8533e4de1"
+  integrity sha512-gZMMk7NK9Dw5QnJ59ONnDV0rt26By0ZCWntPUSWMreEhIO3UB/FE/wv9K6Ooo08+ZOuembe5bxc9+uNYH4pSQQ==
+  dependencies:
+    "@babel/runtime" "^7.7.2"
+    "@tanem/svg-injector" "^8.0.35"
+    prop-types "^15.7.2"
+
 react@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
@@ -8863,6 +8896,11 @@ regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
+
+regenerator-runtime@^0.13.4:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
+  integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
 
 regenerator-transform@^0.14.0:
   version "0.14.1"
